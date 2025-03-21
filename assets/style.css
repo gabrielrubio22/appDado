@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #003366; /* Color de fondo de la app */
+}
+
+#container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Dado 3D</title>
-
-    <!-- Carga de estilos -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Carga de Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #003366; }
+        #container { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+    </style>
 </head>
 <body>
-
     <div id="container"></div>
 
-    <!-- Carga del script -->
-    <script src="script.js"></script>
+    <!-- Cargar Three.js y los cargadores -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/MTLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/OBJLoader.js"></script>
+
+    <!-- Script principal -->
+    <script src="assets/script.js"></script>
 </body>
 </html>

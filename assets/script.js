@@ -56,7 +56,7 @@ mtlLoader.load("Die-OBJ.mtl", function (materials) {
         "Die-OBJ.obj",
         function (object) {
             object.scale.set(2, 2, 2);
-            object.position.set(0, 0, 0);
+            object.position.set(0, 0, 0);  // Centrado
             dado = object;
             scene.add(object);
         },
@@ -102,10 +102,9 @@ function girarDado() {
 // Detectar movimiento del dispositivo (agitar celular)
 if (window.DeviceMotionEvent) {
     window.addEventListener("devicemotion", function(event) {
-        const acceleration = event.acceleration;
-        
+        const acceleration = event.accelerationIncludingGravity;  // Mejor uso de aceleración
         // Si la aceleración es suficientemente alta, activar el giro
-        if (acceleration.x > 5 || acceleration.y > 5 || acceleration.z > 5) {
+        if (Math.abs(acceleration.x) > 10 || Math.abs(acceleration.y) > 10 || Math.abs(acceleration.z) > 10) {
             if (!giroActivo) {
                 vueltas = 0;  // Reiniciar el número de vueltas
                 girarDado();

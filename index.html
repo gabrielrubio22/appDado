@@ -28,7 +28,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // Luz ambiental y direccional
+            // Luces
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
             scene.add(ambientLight);
 
@@ -38,20 +38,20 @@
 
             // Cargar material (.mtl)
             const mtlLoader = new MTLLoader();
-            mtlLoader.load("Die-OBJ.mtl", function (materials) {
+            mtlLoader.load("Die-OBJ.mtl", (materials) => {
                 materials.preload();
 
                 // Cargar modelo 3D (.obj)
                 const objLoader = new OBJLoader();
                 objLoader.setMaterials(materials);
-                objLoader.load("Die-OBJ.obj", function (object) {
+                objLoader.load("Die-OBJ.obj", (object) => {
                     dice = object;
                     dice.scale.set(1, 1, 1);
                     scene.add(dice);
                 });
             });
 
-            // Manejar tamaño de la ventana
+            // Ajustar tamaño en caso de redimensionar ventana
             window.addEventListener('resize', onWindowResize);
             animate();
         }
@@ -68,6 +68,7 @@
             renderer.render(scene, camera);
         }
 
+        // Ejecutar cuando la ventana cargue
         window.onload = init;
     </script>
 </body>

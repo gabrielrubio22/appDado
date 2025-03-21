@@ -9,18 +9,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
 
-    <!-- Preload de texturas -->
-    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_BaseColor.png">
-    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_Normal.png">
-    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_Roughness.png">
-    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_Metallic.png">
-
     <style>
         body {
             margin: 0;
             overflow: hidden;
             background-color: #003366; /* Fondo del color de la app */
             touch-action: none; /* Evita zoom con gestos */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
     </style>
 </head>
@@ -32,21 +30,16 @@
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x003366); // Fondo del color de la app
 
-            // Configuración de la cámara más cerca al dado
+            // Configuración de la cámara centrada
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-            
-            // Ajuste de la distancia para que el dado tenga un tamaño fijo en móviles
-            if (window.innerWidth < 768) {
-                camera.position.set(0, 2.5, 3); // Más cerca en móviles
-            } else {
-                camera.position.set(0, 3, 4); // PC un poco más lejos
-            }
+            camera.position.set(0, 1.5, 3); // Ajuste de altura para centrar en pantalla
+            camera.lookAt(0, 1, 0);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true }); // Activamos antialiasing
+            renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // Iluminación
+            // Iluminación suave
             const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
             scene.add(ambientLight);
 
@@ -54,14 +47,14 @@
             directionalLight.position.set(5, 5, 5);
             scene.add(directionalLight);
 
-            // Cargar texturas
+            // Cargar texturas con efecto redondeado
             const textureLoader = new THREE.TextureLoader();
-            const baseColor = textureLoader.load("ClassicColor/Die_Die_base_BaseColor.png");
-            const normalMap = textureLoader.load("ClassicColor/Die_Die_base_Normal.png");
-            const roughnessMap = textureLoader.load("ClassicColor/Die_Die_base_Roughness.png");
-            const metalnessMap = textureLoader.load("ClassicColor/Die_Die_base_Metallic.png");
+            const baseColor = textureLoader.load("RoundedDice/Dice_BaseColor.png");
+            const normalMap = textureLoader.load("RoundedDice/Dice_Normal.png");
+            const roughnessMap = textureLoader.load("RoundedDice/Dice_Roughness.png");
+            const metalnessMap = textureLoader.load("RoundedDice/Dice_Metallic.png");
 
-            // Material PBR
+            // Material PBR con normal map para efecto de bordes redondeados
             const diceMaterial = new THREE.MeshStandardMaterial({
                 map: baseColor,
                 normalMap: normalMap,
@@ -69,9 +62,9 @@
                 metalnessMap: metalnessMap
             });
 
-            // Cargar modelo OBJ
+            // Cargar modelo de dado con bordes redondeados
             const objLoader = new THREE.OBJLoader();
-            objLoader.load("Die-OBJ.obj", function (object) {
+            objLoader.load("RoundedDice/Dice-Rounded.obj", function (object) {
                 object.traverse(function (child) {
                     if (child.isMesh) {
                         child.material = diceMaterial;
@@ -80,7 +73,7 @@
 
                 dice = object;
                 dice.scale.set(2.2, 2.2, 2.2); // Ajuste de tamaño
-                dice.position.y = 0.5;
+                dice.position.set(0, 1, 0); // Centramos el dado
                 scene.add(dice);
             });
 
@@ -114,7 +107,6 @@
 
         function rollDice() {
             if (dice) {
-                // Ajuste para que solo se vea una cara bien alineada con profundidad
                 const angles = [
                     { x: 0, y: 0, z: 0 },               // Cara 1
                     { x: Math.PI / 2, y: 0, z: 0 },     // Cara 2

@@ -83,7 +83,7 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
-    // Definir posiciones de caras del dado con sus valores
+    // Definir posiciones de caras del dado
     const caras = [
         { x: 0, y: 0, valor: 1 },
         { x: Math.PI / 2, y: 0, valor: 2 },
@@ -95,16 +95,15 @@ function detenerDado() {
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
 
-    // Usar TWEEN.js para animar la rotación hasta la cara aleatoria
+    // Animar hasta la cara seleccionada
     new TWEEN.Tween(dado.rotation)
         .to({ x: caraAleatoria.x, y: caraAleatoria.y, z: 0 }, 1000)
         .easing(TWEEN.Easing.Quadratic.Out)
-        .start();
-
-    // Enviar el resultado a MIT App Inventor
-    if (window.AppInventor) {
-        window.AppInventor.setWebViewString(caraAleatoria.valor.toString());
-    }
+        .start()
+        .onComplete(() => {
+            // 🔥 Enviar el resultado a App Inventor cuando termine de girar
+            window.AppInventor.setWebViewString(caraAleatoria.valor.toString());
+        });
 }
 
 // Función de animación del giro

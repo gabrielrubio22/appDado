@@ -13,14 +13,15 @@
     <div id="container"></div>
 
     <!-- Cargar Three.js y los cargadores -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/MTLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/OBJLoader.js"></script>
+    
+    <!-- Cargar TWEEN.js como módulo y exponerlo globalmente -->
     <script type="module">
-        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
-        import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/MTLLoader.js';
-        import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/OBJLoader.js';
-    
-        console.log("Three.js, MTLLoader y OBJLoader cargados correctamente");
+        import * as TWEEN from 'https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.esm.js';
+        window.TWEEN = TWEEN; // Hacerlo accesible globalmente
     </script>
-    
 
     <!-- Script principal -->
     <script src="assets/script.js"></script>

@@ -3,13 +3,13 @@ const audioGiro = new Audio('assets/dice-roll.mp3');  // Sonido al girar
 const audioThud = new Audio('assets/thud.mp3');  // Sonido al detenerse
 
 // Verificar si los sonidos se cargan correctamente
-audioGiro.oncanplaythrough = () => console.log("Sonido de giro cargado");
-audioThud.oncanplaythrough = () => console.log("Sonido de impacto cargado");
+audioGiro.oncanplaythrough = () => console.log("✅ Sonido de giro cargado");
+audioThud.oncanplaythrough = () => console.log("✅ Sonido de impacto cargado");
 
-audioGiro.onerror = () => console.log("Error cargando sonido de giro");
-audioThud.onerror = () => console.log("Error cargando sonido de impacto");
+audioGiro.onerror = () => console.log("❌ Error cargando sonido de giro");
+audioThud.onerror = () => console.log("❌ Error cargando sonido de impacto");
 
-// Configuración básica de la escena
+// Configuración básica de Three.js
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -29,7 +29,8 @@ scene.add(directionalLight);
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load("textures/Red-White/Die_Die_base_BaseColor.png");
 
-let dado = null; // Referencia al dado
+// Referencia al dado
+let dado = null;
 
 // Cargar modelo y textura con OBJLoader
 const mtlLoader = new THREE.MTLLoader();
@@ -48,10 +49,15 @@ mtlLoader.load("Die-OBJ.mtl", function (materials) {
     objLoader.setMaterials(materials);
     objLoader.setPath("models/");
     objLoader.load("Die-OBJ.obj", function (object) {
+        console.log("✅ Modelo 3D cargado correctamente");
         object.scale.set(2, 2, 2);
         object.position.set(0, 0, 0);
         dado = object;
         scene.add(object);
+    }, function (xhr) {
+        console.log(`Cargando modelo: ${Math.round((xhr.loaded / xhr.total) * 100)}%`);
+    }, function (error) {
+        console.error("❌ Error cargando el modelo:", error);
     });
 });
 
@@ -63,9 +69,8 @@ let giroActivo = false;
 let velocidadGiro = 0;
 const maxVelocidad = 0.2;
 const aceleracion = 0.01;
-const frenado = 0.005;
-let tiempoGiro = 0;
 const tiempoMaxGiro = 180; // 3 segundos (60 FPS * 3s)
+let tiempoGiro = 0;
 
 // Función para girar el dado
 function girarDado() {
@@ -80,12 +85,14 @@ function girarDado() {
 
 // Función para detener el dado en una cara aleatoria
 function detenerDado() {
-    giroActivo = false;
-    velocidadGiro = 0;  // Se fuerza a 0
-    tiempoGiro = 0;  // Se reinicia el contador de tiempo
+    if (!dado) return;
 
-    audioGiro.pause();  // Detener sonido de giro
-    audioThud.play();   // Reproducir sonido de impacto
+    giroActivo = false;
+    velocidadGiro = 0;
+    tiempoGiro = 0;
+
+    audioGiro.pause();
+    audioThud.play();
 
     // Definir posiciones de caras del dado
     const caras = [
@@ -98,38 +105,41 @@ function detenerDado() {
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
-    dado.rotation.set(caraAleatoria.x, caraAleatoria.y, 0);
+    
+    // Usar Tween.js para animar la rotación suavemente
+    new TWEEN.Tween(dado.rotation)
+        .to({ x: caraAleatoria.x, y: caraAleatoria.y, z: 0 }, 500)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start();
 }
-
 
 // Animación del dado
 function animate() {
     requestAnimationFrame(animate);
 
-    if (giroActivo) {
-        if (tiempoGiro < tiempoMaxGiro) {
-            // Acelera hasta la velocidad máxima
-            if (velocidadGiro < maxVelocidad) {
-                velocidadGiro += aceleracion;
+    if (dado) {
+        TWEEN.update(); // Actualizar animaciones Tween
+
+        if (giroActivo) {
+            if (tiempoGiro < tiempoMaxGiro) {
+                if (velocidadGiro < maxVelocidad) {
+                    velocidadGiro += aceleracion;
+                }
+                dado.rotation.x += velocidadGiro;
+                dado.rotation.y += velocidadGiro;
+                tiempoGiro++;
+            } else {
+                detenerDado();
             }
-
-            // Rotar el dado
-            dado.rotation.x += velocidadGiro;
-            dado.rotation.y += velocidadGiro;
-
-            // Contador de tiempo
-            tiempoGiro++;
-        } else {
-            // Cuando pasan 3 segundos, detener el dado
-            detenerDado();
         }
-    }
 
-    renderer.render(scene, camera);
+        renderer.render(scene, camera);
+    } else {
+        console.warn("⚠ El dado aún no se ha cargado");
+    }
 }
 
-
-// Detección de evento shake mejorado
+// Detección de evento shake
 document.addEventListener("shake", function () {
     if (!giroActivo) {
         girarDado();
@@ -142,3 +152,6 @@ window.addEventListener("message", function (event) {
         girarDado();
     }
 });
+
+// Iniciar animación
+animate();

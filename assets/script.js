@@ -24,7 +24,8 @@ scene.add(directionalLight);
 
 // Cargar textura del dado
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load("textures/Red-White/Die_Die_base_BaseColor.png");
+const texture = textureLoader.load("https://gabrielrubio22.github.io/appDado/textures/Red-White/Die_Die_base_BaseColor.png");
+//const texture = textureLoader.load("./textures/Red-White/Die_Die_base_BaseColor.png");
 
 let dado = null; // Referencia al dado
 

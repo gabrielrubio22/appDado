@@ -19,7 +19,7 @@
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #003366; /* Color de fondo de la app */
+            background-color: #003366; /* Color de la app */
         }
     </style>
 </head>
@@ -29,24 +29,25 @@
 
         function init() {
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x003366); // Color de fondo de la app
+            scene.background = new THREE.Color(0x003366); // Fondo del color de la app
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 5);
+            // Configuración de la cámara más cerca al dado
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 3, 3); // Más cerca para que el dado sea grande
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer = new THREE.WebGLRenderer({ antialias: true }); // Activamos antialiasing
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
             // Iluminación
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
             scene.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
             directionalLight.position.set(5, 5, 5);
             scene.add(directionalLight);
 
-            // Cargar texturas desde ClassicColor
+            // Cargar texturas
             const textureLoader = new THREE.TextureLoader();
             const baseColor = textureLoader.load("ClassicColor/Die_Die_base_BaseColor.png");
             const normalMap = textureLoader.load("ClassicColor/Die_Die_base_Normal.png");
@@ -71,7 +72,7 @@
                 });
 
                 dice = object;
-                dice.scale.set(1, 1, 1);
+                dice.scale.set(2, 2, 2); // Aumentar el tamaño del dado
                 dice.position.y = 0.5;
                 scene.add(dice);
             });
@@ -94,7 +95,7 @@
                     acceleration.z * acceleration.z
                 );
 
-                const shakeThreshold = 15; // Sensibilidad del movimiento
+                const shakeThreshold = 15;
                 const now = Date.now();
 
                 if (totalAcceleration > shakeThreshold && (now - lastShakeTime) > 1000) {

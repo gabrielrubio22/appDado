@@ -85,15 +85,18 @@ function detenerDado() {
 
     // Definir posiciones de caras del dado
     const caras = [
-        { x: 0, y: 0, valor: 1 },
-        { x: Math.PI / 2, y: 0, valor: 2 },
-        { x: -Math.PI / 2, y: 0, valor: 3 },
-        { x: Math.PI, y: 0, valor: 4 },
-        { x: 0, y: Math.PI / 2, valor: 5 },
-        { x: 0, y: -Math.PI / 2, valor: 6 }
+        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },
+        { x: Math.PI / 2, y: 0, valor: 2, imagen: "cara2.png" },
+        { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },
+        { x: Math.PI, y: 0, valor: 4, imagen: "cara4.png" },
+        { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },
+        { x: 0, y: -Math.PI / 2, valor: 6, imagen: "cara6.png" }
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
+
+    // Obtener la fecha y hora actual
+    let fechaHora = new Date().toLocaleString(); // Formato: "21/03/2025, 14:35:20"
 
     // Animar hasta la cara seleccionada
     new TWEEN.Tween(dado.rotation)
@@ -101,8 +104,9 @@ function detenerDado() {
         .easing(TWEEN.Easing.Quadratic.Out)
         .start()
         .onComplete(() => {
-            // 🔥 Enviar el resultado a App Inventor cuando termine de girar
-            window.AppInventor.setWebViewString(caraAleatoria.valor.toString());
+            // Enviar el resultado a MIT App Inventor
+            let resultado = `${caraAleatoria.imagen},${fechaHora}`;
+            window.AppInventor.setWebViewString(resultado);
         });
 }
 

@@ -1,3 +1,7 @@
+// Cargar sonidos
+const audioGiro = new Audio('assets/dice-roll.mp3');  // Sonido al girar
+const audioThud = new Audio('assets/thud.mp3');  // Sonido al detenerse
+
 // Configuración básica de la escena
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -60,6 +64,48 @@ mtlLoader.load("Die-OBJ.mtl", function (materials) {
 
 // Posición de la cámara
 camera.position.z = 6;
+
+// Variables para el movimiento
+let giroActivo = false;
+let vueltas = 0;
+let velocidadGiro = 0.05;  // Ajusta la velocidad del giro
+let maxVueltas = 3;  // Número de vueltas que debe dar el dado
+
+// Función para controlar el movimiento y sonido
+function girarDado() {
+    if (!giroActivo) {
+        giroActivo = true;
+        audioGiro.play(); // Reproducir sonido de giro
+    }
+
+    // Hacer girar el dado
+    dado.rotation.x += velocidadGiro;
+    dado.rotation.y += velocidadGiro;
+
+    vueltas++;
+
+    // Detener giro después de 3 vueltas
+    if (vueltas >= maxVueltas) {
+        giroActivo = false;
+        audioGiro.pause();  // Detener el sonido de giro
+        audioThud.play();   // Reproducir el sonido de impacto (thud)
+    }
+}
+
+// Detectar movimiento del dispositivo (agitar celular)
+if (window.DeviceMotionEvent) {
+    window.addEventListener("devicemotion", function(event) {
+        const acceleration = event.acceleration;
+        
+        // Si la aceleración es suficientemente alta, activar el giro
+        if (acceleration.x > 5 || acceleration.y > 5 || acceleration.z > 5) {
+            if (!giroActivo) {
+                vueltas = 0;  // Reiniciar el número de vueltas
+                girarDado();
+            }
+        }
+    });
+}
 
 // Animación
 function animate() {

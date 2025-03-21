@@ -58,7 +58,7 @@ camera.position.z = 6;
 // Variables de animación
 let giroActivo = false;
 let tiempoInicioGiro = 0;
-const tiempoMaxGiro = 3000; // 3 segundos en milisegundos
+const tiempoMaxGiro = 2000; // 3 segundos en milisegundos
 
 // Función para iniciar el giro del dado
 function girarDado() {

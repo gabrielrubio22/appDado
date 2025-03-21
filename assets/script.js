@@ -2,6 +2,13 @@
 const audioGiro = new Audio('assets/dice-roll.mp3');  // Sonido al girar
 const audioThud = new Audio('assets/thud.mp3');  // Sonido al detenerse
 
+// Verificar si los sonidos se cargan correctamente
+audioGiro.oncanplaythrough = () => console.log("Sonido de giro cargado");
+audioThud.oncanplaythrough = () => console.log("Sonido de impacto cargado");
+
+audioGiro.onerror = () => console.log("Error cargando sonido de giro");
+audioThud.onerror = () => console.log("Error cargando sonido de impacto");
+
 // Configuración básica de la escena
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);

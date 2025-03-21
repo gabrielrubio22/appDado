@@ -83,14 +83,14 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
-    // Definir posiciones de caras del dado
+    // Definir posiciones de caras del dado con sus valores
     const caras = [
-        { x: 0, y: 0 },
-        { x: Math.PI / 2, y: 0 },
-        { x: -Math.PI / 2, y: 0 },
-        { x: Math.PI, y: 0 },
-        { x: 0, y: Math.PI / 2 },
-        { x: 0, y: -Math.PI / 2 }
+        { x: 0, y: 0, valor: 1 },
+        { x: Math.PI / 2, y: 0, valor: 2 },
+        { x: -Math.PI / 2, y: 0, valor: 3 },
+        { x: Math.PI, y: 0, valor: 4 },
+        { x: 0, y: Math.PI / 2, valor: 5 },
+        { x: 0, y: -Math.PI / 2, valor: 6 }
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
@@ -100,6 +100,11 @@ function detenerDado() {
         .to({ x: caraAleatoria.x, y: caraAleatoria.y, z: 0 }, 1000)
         .easing(TWEEN.Easing.Quadratic.Out)
         .start();
+
+    // Enviar el resultado a MIT App Inventor
+    if (window.AppInventor) {
+        window.AppInventor.setWebViewString(caraAleatoria.valor.toString());
+    }
 }
 
 // Función de animación del giro

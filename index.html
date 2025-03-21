@@ -2,139 +2,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Dado 3D</title>
+
+    <!-- Carga de estilos -->
+    <link rel="stylesheet" href="style.css">
 
     <!-- Carga de Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #003366; /* Fondo del color de la app */
-            touch-action: none; /* Evita zoom con gestos */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-        }
-    </style>
 </head>
 <body>
-    <script>
-        let scene, camera, renderer, dice, lastShakeTime = 0;
 
-        function init() {
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x003366); // Fondo del color de la app
+    <div id="container"></div>
 
-            // Configuración de la cámara centrada
-            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 1.5, 3); // Ajuste de altura para centrar en pantalla
-
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            // Iluminación suave
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-            scene.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-            directionalLight.position.set(5, 5, 5);
-            scene.add(directionalLight);
-
-            // Cargar texturas con efecto redondeado
-            const textureLoader = new THREE.TextureLoader();
-            const baseColor = textureLoader.load("RoundedDice/Dice_BaseColor.png");
-            const normalMap = textureLoader.load("RoundedDice/Dice_Normal.png");
-            const roughnessMap = textureLoader.load("RoundedDice/Dice_Roughness.png");
-            const metalnessMap = textureLoader.load("RoundedDice/Dice_Metallic.png");
-
-            // Material PBR con normal map para efecto de bordes redondeados
-            const diceMaterial = new THREE.MeshStandardMaterial({
-                map: baseColor,
-                normalMap: normalMap,
-                roughnessMap: roughnessMap,
-                metalnessMap: metalnessMap
-            });
-
-            // Cargar modelo de dado con bordes redondeados
-            const objLoader = new THREE.OBJLoader();
-            objLoader.load("RoundedDice/Dice-Rounded.obj", function (object) {
-                object.traverse(function (child) {
-                    if (child.isMesh) {
-                        child.material = diceMaterial;
-                    }
-                });
-
-                dice = object;
-                dice.scale.set(1.8, 1.8, 1.8); // Ajuste de tamaño más pequeño
-                dice.position.set(0, 1, 0); // Centramos el dado
-                scene.add(dice);
-
-                camera.lookAt(dice.position); // Asegurar que el dado esté siempre centrado
-            });
-
-            animate();
-            setupShakeDetection();
-            window.addEventListener("resize", onWindowResize, false);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        function setupShakeDetection() {
-            window.addEventListener("devicemotion", function (event) {
-                const acceleration = event.accelerationIncludingGravity;
-                const totalAcceleration = Math.sqrt(
-                    acceleration.x * acceleration.x +
-                    acceleration.y * acceleration.y +
-                    acceleration.z * acceleration.z
-                );
-
-                const shakeThreshold = 15;
-                const now = Date.now();
-
-                if (totalAcceleration > shakeThreshold && (now - lastShakeTime) > 1000) {
-                    lastShakeTime = now;
-                    rollDice();
-                }
-            });
-        }
-
-        function rollDice() {
-            if (dice) {
-                const angles = [
-                    { x: 0, y: 0, z: 0 },               // Cara 1
-                    { x: Math.PI / 2, y: 0, z: 0 },     // Cara 2
-                    { x: -Math.PI / 2, y: 0, z: 0 },    // Cara 3
-                    { x: Math.PI, y: 0, z: 0 },         // Cara 4
-                    { x: 0, y: Math.PI / 2, z: 0 },     // Cara 5
-                    { x: 0, y: -Math.PI / 2, z: 0 }     // Cara 6
-                ];
-
-                const randomIndex = Math.floor(Math.random() * angles.length);
-                const rotation = angles[randomIndex];
-
-                dice.rotation.x = rotation.x;
-                dice.rotation.y = rotation.y;
-                dice.rotation.z = rotation.z;
-            }
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        window.onload = init;
-    </script>
+    <!-- Carga del script -->
+    <script src="script.js"></script>
 </body>
 </html>

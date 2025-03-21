@@ -7,9 +7,13 @@
 
     <!-- Carga de Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <!-- OBJLoader -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+
+    <!-- Preload de texturas para evitar problemas en GitHub Pages -->
+    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_BaseColor.png">
+    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_Normal.png">
+    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_Roughness.png">
+    <link rel="preload" as="image" href="ClassicColor/Die_Die_base_Metallic.png">
 
     <style>
         body {
@@ -19,7 +23,6 @@
         }
     </style>
 </head>
-
 <body>
     <script>
         let scene, camera, renderer, dice;
@@ -43,17 +46,12 @@
             directionalLight.position.set(5, 5, 5);
             scene.add(directionalLight);
 
-            const pointLight = new THREE.PointLight(0xffffff, 1.5);
-            pointLight.position.set(-3, 3, 3);
-            scene.add(pointLight);
-
-            // Cargar texturas desde ClassicColor (Dado Blanco con Puntos Negros)
+            // Cargar texturas desde ClassicColor
             const textureLoader = new THREE.TextureLoader();
-
-            const baseColor = textureLoader.load("./ClassicColor/Die_Die_base_BaseColor.png");
-            const normalMap = textureLoader.load("./ClassicColor/Die_Die_base_Normal.png");
-            const roughnessMap = textureLoader.load("./ClassicColor/Die_Die_base_Roughness.png");
-            const metalnessMap = textureLoader.load("./ClassicColor/Die_Die_base_Metallic.png");
+            const baseColor = textureLoader.load("ClassicColor/Die_Die_base_BaseColor.png");
+            const normalMap = textureLoader.load("ClassicColor/Die_Die_base_Normal.png");
+            const roughnessMap = textureLoader.load("ClassicColor/Die_Die_base_Roughness.png");
+            const metalnessMap = textureLoader.load("ClassicColor/Die_Die_base_Metallic.png");
 
             // Material PBR
             const diceMaterial = new THREE.MeshStandardMaterial({
@@ -65,7 +63,7 @@
 
             // Cargar modelo OBJ
             const objLoader = new THREE.OBJLoader();
-            objLoader.load("./Die-OBJ.obj", function (object) {
+            objLoader.load("Die-OBJ.obj", function (object) {
                 object.traverse(function (child) {
                     if (child.isMesh) {
                         child.material = diceMaterial;

@@ -36,14 +36,10 @@ const mtlLoader = new THREE.MTLLoader();
 mtlLoader.setPath("models/");
 mtlLoader.load("Die-OBJ.mtl", function (materials) {
     materials.preload();
-
-    // Configurar materiales manualmente
+    
     for (let matName in materials.materials) {
         let mat = materials.materials[matName];
-        mat.transparent = false;
-        mat.opacity = 1;
-        mat.map = texture;  // Aplicar la textura manualmente
-        mat.emissive = new THREE.Color(0x111111); // Leve iluminación propia
+        mat.map = texture;
         mat.metalness = 0.3;
         mat.roughness = 0.7;
     }
@@ -51,71 +47,100 @@ mtlLoader.load("Die-OBJ.mtl", function (materials) {
     const objLoader = new THREE.OBJLoader();
     objLoader.setMaterials(materials);
     objLoader.setPath("models/");
-    
-    objLoader.load(
-        "Die-OBJ.obj",
-        function (object) {
-            object.scale.set(2, 2, 2);
-            object.position.set(0, 0, 0);  // Centrado
-            dado = object;
-            scene.add(object);
-        },
-        function (xhr) {
-            console.log(`Cargando modelo: ${(xhr.loaded / xhr.total) * 100}%`);
-        },
-        function (error) {
-            console.error("Error cargando el modelo:", error);
-        }
-    );
+    objLoader.load("Die-OBJ.obj", function (object) {
+        object.scale.set(2, 2, 2);
+        object.position.set(0, 0, 0);
+        dado = object;
+        scene.add(object);
+    },
+    function (xhr) {
+        const progreso = xhr.total ? (xhr.loaded / xhr.total) * 100 : 0;
+        console.log(`Cargando modelo: ${progreso}%`);
+    },
+    function (error) {
+        console.error("Error cargando el modelo:", error);
+    });
 });
 
 // Posición de la cámara
 camera.position.z = 6;
 
 // Variables para el movimiento
-let giroActivo = false;
-let vueltas = 0;
-let velocidadGiro = 0.05;  // Ajusta la velocidad del giro
-let maxVueltas = 3;  // Número de vueltas que debe dar el dado
+giroActivo = false;
+velocidadGiro = 0;
+const maxVelocidad = 0.2;
+const aceleracion = 0.01;
+const frenado = 0.005;
+let tiempoGiro = 0;
 
-// Función para controlar el movimiento y sonido
+// Función para girar el dado
 function girarDado() {
-    if (!giroActivo) {
+    if (!giroActivo && dado) {
         giroActivo = true;
-        audioGiro.play(); // Reproducir sonido de giro
-    }
-
-    // Hacer girar el dado
-    dado.rotation.x += velocidadGiro;
-    dado.rotation.y += velocidadGiro;
-
-    vueltas++;
-
-    // Detener giro después de 3 vueltas
-    if (vueltas >= maxVueltas) {
-        giroActivo = false;
-        audioGiro.pause();  // Detener el sonido de giro
-        audioThud.play();   // Reproducir el sonido de impacto (thud)
+        velocidadGiro = 0.02;
+        tiempoGiro = 0;
+        if (audioGiro.paused) {
+            audioGiro.currentTime = 0;
+            audioGiro.play();
+        }
     }
 }
 
-// Detectar movimiento del dispositivo (agitar celular)
-if (window.DeviceMotionEvent) {
-    window.addEventListener("devicemotion", function(event) {
-        const acceleration = event.accelerationIncludingGravity;  // Mejor uso de aceleración
-        // Si la aceleración es suficientemente alta, activar el giro
-        if (Math.abs(acceleration.x) > 10 || Math.abs(acceleration.y) > 10 || Math.abs(acceleration.z) > 10) {
-            if (!giroActivo) {
-                vueltas = 0;  // Reiniciar el número de vueltas
-                girarDado();
-            }
+// Función para detener el dado
+function detenerDado() {
+    if (giroActivo && velocidadGiro <= 0) {
+        giroActivo = false;
+        audioGiro.pause();
+        audioThud.play();
+
+        const caras = [
+            { x: 0, y: 0 },
+            { x: Math.PI / 2, y: 0 },
+            { x: -Math.PI / 2, y: 0 },
+            { x: Math.PI, y: 0 },
+            { x: 0, y: Math.PI / 2 },
+            { x: 0, y: -Math.PI / 2 }
+        ];
+        let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
+        if (dado) {
+            dado.rotation.x = caraAleatoria.x;
+            dado.rotation.y = caraAleatoria.y;
         }
-    });
+    }
 }
 
 // Animación
 function animate() {
     requestAnimationFrame(animate);
+    if (giroActivo && dado) {
+        if (velocidadGiro < maxVelocidad) {
+            velocidadGiro += aceleracion;
+        } else {
+            tiempoGiro++;
+        }
+        if (tiempoGiro > 60) {
+            velocidadGiro -= frenado;
+            if (velocidadGiro <= 0) {
+                detenerDado();
+            }
+        }
+        dado.rotation.x += velocidadGiro;
+        dado.rotation.y += velocidadGiro;
+    }
     renderer.render(scene, camera);
 }
 animate();
+
+// Detección de evento shake
+document.addEventListener("shake", function () {
+    if (!giroActivo) {
+        girarDado();
+    }
+});
+
+// Simulación de shake con App Inventor
+window.addEventListener("message", function (event) {
+    if (event.data === "shake") {
+        girarDado();
+    }
+});

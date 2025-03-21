@@ -81,8 +81,11 @@ function girarDado() {
 // Función para detener el dado en una cara aleatoria
 function detenerDado() {
     giroActivo = false;
-    audioGiro.pause();
-    audioThud.play();
+    velocidadGiro = 0;  // Se fuerza a 0
+    tiempoGiro = 0;  // Se reinicia el contador de tiempo
+
+    audioGiro.pause();  // Detener sonido de giro
+    audioThud.play();   // Reproducir sonido de impacto
 
     // Definir posiciones de caras del dado
     const caras = [
@@ -98,32 +101,33 @@ function detenerDado() {
     dado.rotation.set(caraAleatoria.x, caraAleatoria.y, 0);
 }
 
+
 // Animación del dado
 function animate() {
     requestAnimationFrame(animate);
 
     if (giroActivo) {
-        if (velocidadGiro < maxVelocidad) {
-            velocidadGiro += aceleracion;
-        }
-
-        // Detener después de 3 segundos
-        if (tiempoGiro >= tiempoMaxGiro) {
-            velocidadGiro -= frenado;
-            if (velocidadGiro <= 0) {
-                detenerDado();
+        if (tiempoGiro < tiempoMaxGiro) {
+            // Acelera hasta la velocidad máxima
+            if (velocidadGiro < maxVelocidad) {
+                velocidadGiro += aceleracion;
             }
-        } else {
-            tiempoGiro++;
-        }
 
-        dado.rotation.x += velocidadGiro;
-        dado.rotation.y += velocidadGiro;
+            // Rotar el dado
+            dado.rotation.x += velocidadGiro;
+            dado.rotation.y += velocidadGiro;
+
+            // Contador de tiempo
+            tiempoGiro++;
+        } else {
+            // Cuando pasan 3 segundos, detener el dado
+            detenerDado();
+        }
     }
 
     renderer.render(scene, camera);
 }
-animate();
+
 
 // Detección de evento shake mejorado
 document.addEventListener("shake", function () {

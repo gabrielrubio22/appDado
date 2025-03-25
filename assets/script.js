@@ -85,12 +85,12 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
-    // Corregir asignación de caras según la observación del usuario
+    // Ajustar las caras según lo observado
     const caras = [
-        { x: 0, y: 0, valor: 4, imagen: "cara4.png" },  // Antes estaba 1
-        { x: Math.PI, y: 0, valor: 3, imagen: "cara3.png" },  // Antes estaba 6
-        { x: Math.PI / 2, y: 0, valor: 1, imagen: "cara1.png" },  // Antes estaba 4
-        { x: -Math.PI / 2, y: 0, valor: 6, imagen: "cara6.png" },  // Antes estaba 3
+        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },  // Antes 4, ahora corregido a 1
+        { x: Math.PI, y: 0, valor: 6, imagen: "cara6.png" },  // Antes 3, ahora corregido a 6
+        { x: Math.PI / 2, y: 0, valor: 4, imagen: "cara4.png" },  // Antes 1, ahora corregido a 4
+        { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },  // Antes 6, ahora corregido a 3
         { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },  // Correcto
         { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }   // Correcto
     ];

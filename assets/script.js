@@ -145,3 +145,5 @@ window.addEventListener("message", function (event) {
         girarDado();
     }
 });
+
+document.getElementById("lanzarDado").addEventListener("click", girarDado);

@@ -87,11 +87,11 @@ function detenerDado() {
 
     //caras
     const caras = [
-        { x: 0, y: 0, valor: 5, imagen: "cara5.png" },    // Antes decía 6, ahora es 5
+        { x: 0, y: 0, valor: 4, imagen: "cara4.png" },    // Antes decía 6, ahora es 5
         { x: -1.57, y: 0, valor: 6, imagen: "cara6.png" }, // Antes decía 5, ahora es 6
         { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" }, // Correcto
         { x: 1.57, y: 0, valor: 1, imagen: "cara1.png" },  // Correcto
-        { x: 0, y: 1.57, valor: 4, imagen: "cara4.png" },  // Antes decía 3, ahora es 4
+        { x: 0, y: 1.57, valor: 5, imagen: "cara5.png" },  // Antes decía 3, ahora es 4
         { x: 3.14, y: 0, valor: 3, imagen: "cara3.png" }   // Antes decía 4, ahora es 3
     ];
     
@@ -159,4 +159,4 @@ window.addEventListener("message", function (event) {
 
 document.getElementById("lanzarDado").addEventListener("click", girarDado);
 //esto me avisa si ya se subio el cambio a github pages, solo yo lo entiendo
-console.log("cambio7");
+console.log("cambio8");

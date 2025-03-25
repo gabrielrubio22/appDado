@@ -67,14 +67,15 @@ const tiempoMaxGiro = 1000; // 1 segundo en milisegundos
 
 // Función para iniciar el giro del dado
 function girarDado() {
-    if (!giroActivo && dado) {
-        giroActivo = true;
-        tiempoInicioGiro = Date.now();
-        audioGiro.currentTime = 0;
-        audioGiro.play();
+    if (giroActivo || !dado) return; // Evitar múltiples giros simultáneos
+    console.log("Dado lanzado");
 
-        animateGiro(); // Inicia la animación de giro
-    }
+    giroActivo = true;
+    tiempoInicioGiro = Date.now();
+    audioGiro.currentTime = 0;
+    audioGiro.play();
+
+    animateGiro(); // Iniciar animación
 }
 
 // Función para detener el dado en una cara aleatoria suavemente
@@ -87,54 +88,62 @@ function detenerDado() {
 
     // Ajustar las caras según lo observado
     const caras = [
-        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },  // Antes 4, ahora corregido a 1
-        { x: Math.PI, y: 0, valor: 6, imagen: "cara6.png" },  // Antes 3, ahora corregido a 6
-        { x: Math.PI / 2, y: 0, valor: 4, imagen: "cara4.png" },  // Antes 1, ahora corregido a 4
-        { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },  // Antes 6, ahora corregido a 3
-        { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },  // Correcto
-        { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }   // Correcto
+        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },  
+        { x: Math.PI, y: 0, valor: 6, imagen: "cara6.png" },  
+        { x: Math.PI / 2, y: 0, valor: 4, imagen: "cara4.png" },  
+        { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },  
+        { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },  
+        { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }   
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
 
-    // Mostrar en la consola para verificar
     console.log(`Rotación final del dado: x=${caraAleatoria.x}, y=${caraAleatoria.y}, Cara: ${caraAleatoria.valor}`);
 
-    // Obtener la fecha y hora actual
     let fechaHora = new Date().toLocaleString();
 
-    // Animar hasta la cara seleccionada
     new TWEEN.Tween(dado.rotation)
         .to({ x: caraAleatoria.x, y: caraAleatoria.y, z: 0 }, 1000)
         .easing(TWEEN.Easing.Quadratic.Out)
         .start()
         .onComplete(() => {
-            // Enviar el número correcto de la cara y la fecha a MIT App Inventor
             let resultado = `${caraAleatoria.valor},${fechaHora}`;
-            window.AppInventor.setWebViewString(resultado);
+            if (window.AppInventor) {
+                window.AppInventor.setWebViewString(resultado);
+            } else {
+                console.warn("AppInventor no está definido");
+            }
         });
 }
 
 // Función de animación del giro
 function animateGiro() {
-    if (!giroActivo) return;
+    if (!giroActivo || !dado) return;
 
     let tiempoTranscurrido = Date.now() - tiempoInicioGiro;
+    console.log(`Tiempo transcurrido: ${tiempoTranscurrido} ms`); // Debug
 
     if (tiempoTranscurrido < tiempoMaxGiro) {
-        // Girar el dado continuamente
         dado.rotation.x += 0.2;
         dado.rotation.y += 0.2;
         requestAnimationFrame(animateGiro);
     } else {
-        detenerDado(); // Detener después de 1 segundo
+        detenerDado(); 
     }
 }
 
 // Loop de animación general
 function animate() {
     requestAnimationFrame(animate);
-    if (window.TWEEN) TWEEN.update();
+    
+    try {
+        if (window.TWEEN) {
+            window.TWEEN.update();
+        }
+    } catch (error) {
+        console.error("Error en TWEEN:", error);
+    }
+
     renderer.render(scene, camera);
 }
 animate();

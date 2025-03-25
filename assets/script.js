@@ -85,14 +85,14 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
-    // Definir posiciones de caras del dado (corregidas)
+    // Corregir asignación de caras según la observación del usuario
     const caras = [
-        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },
-        { x: Math.PI, y: 0, valor: 6, imagen: "cara6.png" },
-        { x: Math.PI / 2, y: 0, valor: 4, imagen: "cara4.png" },
-        { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },
-        { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },
-        { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }
+        { x: 0, y: 0, valor: 4, imagen: "cara4.png" },  // Antes estaba 1
+        { x: Math.PI, y: 0, valor: 3, imagen: "cara3.png" },  // Antes estaba 6
+        { x: Math.PI / 2, y: 0, valor: 1, imagen: "cara1.png" },  // Antes estaba 4
+        { x: -Math.PI / 2, y: 0, valor: 6, imagen: "cara6.png" },  // Antes estaba 3
+        { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },  // Correcto
+        { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }   // Correcto
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];

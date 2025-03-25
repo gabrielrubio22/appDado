@@ -88,12 +88,12 @@ function detenerDado() {
 
     // Ajustar las caras según lo observado
     const caras = [
-        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },  
-        { x: Math.PI, y: 0, valor: 6, imagen: "cara6.png" },  
-        { x: Math.PI / 2, y: 0, valor: 4, imagen: "cara4.png" },  
-        { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },  
-        { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },  
-        { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }   
+        { x: 3.14, y: 0, valor: 1, imagen: "cara1.png" },  // Corregido para que 1 salga correctamente
+        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" }, // 2 ya estaba bien
+        { x: -1.57, y: 0, valor: 3, imagen: "cara3.png" }, // Corregido para que 3 salga bien
+        { x: 1.57, y: 0, valor: 4, imagen: "cara4.png" },  // Corregido para que 4 salga bien
+        { x: 0, y: 1.57, valor: 5, imagen: "cara5.png" },  // 5 ya estaba bien
+        { x: 0, y: 0, valor: 6, imagen: "cara6.png" }      // Corregido para que 6 salga bien
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];

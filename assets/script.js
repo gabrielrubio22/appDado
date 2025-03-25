@@ -157,4 +157,4 @@ window.addEventListener("message", function (event) {
 });
 
 document.getElementById("lanzarDado").addEventListener("click", girarDado);
-console.log(cambio3)
+console.log("cambio4");

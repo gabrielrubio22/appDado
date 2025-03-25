@@ -88,13 +88,14 @@ function detenerDado() {
 
     // Ajustar las caras según lo observado
     const caras = [
-        { x: 3.14, y: 0, valor: 1, imagen: "cara1.png" },  // Corregido para que 1 salga correctamente
-        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" }, // 2 ya estaba bien
-        { x: -1.57, y: 0, valor: 3, imagen: "cara3.png" }, // Corregido para que 3 salga bien
-        { x: 1.57, y: 0, valor: 4, imagen: "cara4.png" },  // Corregido para que 4 salga bien
-        { x: 0, y: 1.57, valor: 5, imagen: "cara5.png" },  // 5 ya estaba bien
-        { x: 0, y: 0, valor: 6, imagen: "cara6.png" }      // Corregido para que 6 salga bien
+        { x: -1.57, y: 0, valor: 1, imagen: "cara1.png" },  // Corregido
+        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" },  // 2 estaba bien
+        { x: 3.14, y: 0, valor: 3, imagen: "cara3.png" },   // Corregido
+        { x: 0, y: 0, valor: 4, imagen: "cara4.png" },      // Corregido
+        { x: 0, y: 1.57, valor: 5, imagen: "cara5.png" },   // 5 estaba bien
+        { x: 1.57, y: 0, valor: 6, imagen: "cara6.png" }    // Corregido
     ];
+
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
 
@@ -128,14 +129,14 @@ function animateGiro() {
         dado.rotation.y += 0.2;
         requestAnimationFrame(animateGiro);
     } else {
-        detenerDado(); 
+        detenerDado();
     }
 }
 
 // Loop de animación general
 function animate() {
     requestAnimationFrame(animate);
-    
+
     try {
         if (window.TWEEN) {
             window.TWEEN.update();

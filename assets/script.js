@@ -157,4 +157,4 @@ window.addEventListener("message", function (event) {
 
 document.getElementById("lanzarDado").addEventListener("click", girarDado);
 //esto me avisa si ya se subio el cambio a github pages, solo yo lo entiendo
-console.log("cambio4");
+console.log("cambio5");

@@ -78,7 +78,6 @@ function girarDado() {
     animateGiro(); // Iniciar animación
 }
 
-// Función para detener el dado en una cara aleatoria suavemente
 function detenerDado() {
     if (!dado) return;
 
@@ -86,11 +85,12 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
+    // Definir las caras correctamente
     const caras = [
-        { x: 0, y: 0, valor: 6, imagen: "cara6.png" },   // Arriba
-        { x: -1.57, y: 0, valor: 5, imagen: "cara5.png" },  // Frente (antes era incorrecto)
-        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" },  // Izquierda
-        { x: 1.57, y: 0, valor: 1, imagen: "cara1.png" },  // Abajo
+        { x: 0, y: 0, valor: 6, imagen: "cara6.png" },    // Superior
+        { x: -1.57, y: 0, valor: 5, imagen: "cara5.png" }, // Frontal
+        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" }, // Izquierda
+        { x: 1.57, y: 0, valor: 1, imagen: "cara1.png" },  // Inferior
         { x: 0, y: 1.57, valor: 3, imagen: "cara3.png" },  // Derecha
         { x: 3.14, y: 0, valor: 4, imagen: "cara4.png" }   // Atrás
     ];
@@ -114,6 +114,7 @@ function detenerDado() {
             }
         });
 }
+
 
 
 // Función de animación del giro
@@ -157,4 +158,4 @@ window.addEventListener("message", function (event) {
 
 document.getElementById("lanzarDado").addEventListener("click", girarDado);
 //esto me avisa si ya se subio el cambio a github pages, solo yo lo entiendo
-console.log("cambio5");
+console.log("cambio6");

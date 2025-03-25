@@ -25,7 +25,6 @@ scene.add(directionalLight);
 // Cargar textura del dado
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load("https://gabrielrubio22.github.io/appDado/textures/ClassicColor/Die_Die_base_BaseColor.png");
-//const texture = textureLoader.load("./textures/Red-White/Die_Die_base_BaseColor.png");
 
 let dado = null; // Referencia al dado
 
@@ -54,6 +53,9 @@ mtlLoader.load("Die-OBJ.mtl", function (materials) {
     });
 });
 
+// Agregar ejes de referencia para depuración
+const axesHelper = new THREE.AxesHelper(3);
+scene.add(axesHelper);
 
 // Posición inicial de la cámara
 camera.position.z = 6;
@@ -61,7 +63,7 @@ camera.position.z = 6;
 // Variables de animación
 let giroActivo = false;
 let tiempoInicioGiro = 0;
-const tiempoMaxGiro = 1000; // 3 segundos en milisegundos
+const tiempoMaxGiro = 1000; // 1 segundo en milisegundos
 
 // Función para iniciar el giro del dado
 function girarDado() {
@@ -83,20 +85,23 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
-    // Definir posiciones de caras del dado
+    // Definir posiciones de caras del dado (corregidas)
     const caras = [
         { x: 0, y: 0, valor: 1, imagen: "cara1.png" },
-        { x: Math.PI / 2, y: 0, valor: 2, imagen: "cara2.png" },
+        { x: Math.PI, y: 0, valor: 6, imagen: "cara6.png" },
+        { x: Math.PI / 2, y: 0, valor: 4, imagen: "cara4.png" },
         { x: -Math.PI / 2, y: 0, valor: 3, imagen: "cara3.png" },
-        { x: Math.PI, y: 0, valor: 4, imagen: "cara4.png" },
         { x: 0, y: Math.PI / 2, valor: 5, imagen: "cara5.png" },
-        { x: 0, y: -Math.PI / 2, valor: 6, imagen: "cara6.png" }
+        { x: 0, y: -Math.PI / 2, valor: 2, imagen: "cara2.png" }
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
 
+    // Mostrar en la consola para verificar
+    console.log(`Rotación final del dado: x=${caraAleatoria.x}, y=${caraAleatoria.y}, Cara: ${caraAleatoria.valor}`);
+
     // Obtener la fecha y hora actual
-    let fechaHora = new Date().toLocaleString(); // Formato: "21/03/2025, 14:35:20"
+    let fechaHora = new Date().toLocaleString();
 
     // Animar hasta la cara seleccionada
     new TWEEN.Tween(dado.rotation)
@@ -104,8 +109,8 @@ function detenerDado() {
         .easing(TWEEN.Easing.Quadratic.Out)
         .start()
         .onComplete(() => {
-            // Enviar el resultado a MIT App Inventor
-            let resultado = `${caraAleatoria.imagen},${fechaHora}`;
+            // Enviar el número correcto de la cara y la fecha a MIT App Inventor
+            let resultado = `${caraAleatoria.valor},${fechaHora}`;
             window.AppInventor.setWebViewString(resultado);
         });
 }
@@ -122,14 +127,14 @@ function animateGiro() {
         dado.rotation.y += 0.2;
         requestAnimationFrame(animateGiro);
     } else {
-        detenerDado(); // Detener después de 3 segundos
+        detenerDado(); // Detener después de 1 segundo
     }
 }
 
 // Loop de animación general
 function animate() {
     requestAnimationFrame(animate);
-    if (window.TWEEN) TWEEN.update(); // Asegurar que las animaciones de TWEEN funcionen
+    if (window.TWEEN) TWEEN.update();
     renderer.render(scene, camera);
 }
 animate();

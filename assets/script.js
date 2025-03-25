@@ -86,14 +86,13 @@ function detenerDado() {
     audioGiro.pause();
     audioThud.play();
 
-    // Ajustar las caras según lo observado
     const caras = [
-        { x: 0, y: 0, valor: 1, imagen: "cara1.png" },      // Corregido: 1 en esta rotación
-        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" },  // 2 ya estaba bien
-        { x: -1.57, y: 0, valor: 3, imagen: "cara3.png" },  // Corregido: -1.57 en X es 3
-        { x: 1.57, y: 0, valor: 4, imagen: "cara4.png" },   // Corregido: 1.57 en X es 4
-        { x: 0, y: 1.57, valor: 5, imagen: "cara5.png" },   // 5 ya estaba bien
-        { x: 3.14, y: 0, valor: 6, imagen: "cara6.png" }    // Corregido: 3.14 en X es 6
+        { x: 0, y: 0, valor: 6, imagen: "cara6.png" },   // Arriba
+        { x: -1.57, y: 0, valor: 5, imagen: "cara5.png" },  // Frente (antes era incorrecto)
+        { x: 0, y: -1.57, valor: 2, imagen: "cara2.png" },  // Izquierda
+        { x: 1.57, y: 0, valor: 1, imagen: "cara1.png" },  // Abajo
+        { x: 0, y: 1.57, valor: 3, imagen: "cara3.png" },  // Derecha
+        { x: 3.14, y: 0, valor: 4, imagen: "cara4.png" }   // Atrás
     ];
 
     let caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
@@ -157,4 +156,5 @@ window.addEventListener("message", function (event) {
 });
 
 document.getElementById("lanzarDado").addEventListener("click", girarDado);
+//esto me avisa si ya se subio el cambio a github pages, solo yo lo entiendo
 console.log("cambio4");
